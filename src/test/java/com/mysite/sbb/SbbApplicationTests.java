@@ -4,6 +4,7 @@ import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerRepository;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
+import com.mysite.sbb.question.QuestionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 @SpringBootTest
 class SbbApplicationTests {
+
+	@Autowired
+	private QuestionService questionService;
 
 	@Autowired
 	private QuestionRepository questionRepository;
@@ -56,6 +60,16 @@ class SbbApplicationTests {
 			a.setQuestion(q);
 			a.setCreateDate(LocalDateTime.now());
 			this.answerRepository.save(a);
+		}
+	}
+
+	@Test
+	@DisplayName("대량 테스트 데이터 생성")
+	void testJpa() {
+		for (int i = 1; i <= 300; i++) {
+			String subject = String.format("테스트 데이터입니다:[%03d]", i);
+			String content = "내용무";
+			this.questionService.create(subject, content);
 		}
 	}
 
